@@ -6,8 +6,6 @@ StandardPatient::StandardPatient(std::string id, std::string firstName,
     : Patient(id, firstName, lastName, healthStatus, arrivalTime,
               requiredTreatmentTime) {}
 
-bool StandardPatient::performWaitingStep() {
-  return false;
-}
+bool StandardPatient::performWaitingStep() { return false; }
 
 std::string StandardPatient::getDiagnosis() const { return "Standard Illness"; }

@@ -57,10 +57,6 @@
           runtimeInputs = [ pythonEnv ];
           text = ''
             export STREAMLIT_SERVER_FILE_WATCHER_TYPE=none
-
-            echo "Starting SOR Dashboard..."
-            echo "Make sure you are running this from a directory that contains 'output/simulation.csv'"
-            exec streamlit run ${./dashboard.py} "$@"
           '';
         };
 

@@ -4,9 +4,7 @@ Nurse::Nurse(std::string id, std::string firstName, std::string lastName,
              std::string employeeId)
     : Employee(id, firstName, lastName, employeeId) {}
 
-bool Nurse::isBusy() const {
-  return false;
-}
+bool Nurse::isBusy() const { return false; }
 
 void Nurse::performTriage(Patient *p) {
   if (!p)
