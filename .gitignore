@@ -1,3 +1,5 @@
-result/
+result
 output/*
+.cache/
+obj/
 bin/
