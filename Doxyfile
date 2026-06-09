@@ -1,0 +1,8 @@
+PROJECT_NAME           = "SOR Symulacja"
+OUTPUT_DIRECTORY       = docs_out
+INPUT                  = include src
+RECURSIVE              = YES
+GENERATE_HTML          = YES
+GENERATE_LATEX         = NO
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = YES
