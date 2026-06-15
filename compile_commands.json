@@ -1,0 +1,119 @@
+[
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "g++",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/main.o",
+      "src/main.cpp"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/main.o"
+  },
+  {
+    "file": "src/main.cpp",
+    "arguments": [
+      "g++",
+      "-fno-omit-frame-pointer",
+      "-mno-omit-leaf-frame-pointer",
+      "-march=armv8-a",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/main.o",
+      "src/main.cpp",
+      "-B/nix/store/1bdzriipn18184zpwh2lfdabk2gqcgxn-glibc-2.42-61/lib/",
+      "-idirafter",
+      "/nix/store/11azz9spqc81walgg0mq9wjxrgbi4xqz-glibc-2.42-61-dev/include",
+      "-idirafter",
+      "/nix/store/hy0wk8hisvsiql18i7v8qrvzkcagz1nc-gcc-15.2.0/lib/gcc/aarch64-unknown-linux-gnu/15.2.0/include-fixed",
+      "-B/nix/store/7a3zsvzzm9ki2r3w2cl0mx12zjicinkj-gcc-15.2.0-lib/lib"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/main.o"
+  },
+  {
+    "file": "src/Nurse.cpp",
+    "arguments": [
+      "g++",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/Nurse.o",
+      "src/Nurse.cpp"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/Nurse.o"
+  },
+  {
+    "file": "src/Nurse.cpp",
+    "arguments": [
+      "g++",
+      "-fno-omit-frame-pointer",
+      "-mno-omit-leaf-frame-pointer",
+      "-march=armv8-a",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/Nurse.o",
+      "src/Nurse.cpp",
+      "-B/nix/store/1bdzriipn18184zpwh2lfdabk2gqcgxn-glibc-2.42-61/lib/",
+      "-idirafter",
+      "/nix/store/11azz9spqc81walgg0mq9wjxrgbi4xqz-glibc-2.42-61-dev/include",
+      "-idirafter",
+      "/nix/store/hy0wk8hisvsiql18i7v8qrvzkcagz1nc-gcc-15.2.0/lib/gcc/aarch64-unknown-linux-gnu/15.2.0/include-fixed",
+      "-B/nix/store/7a3zsvzzm9ki2r3w2cl0mx12zjicinkj-gcc-15.2.0-lib/lib"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/Nurse.o"
+  },
+  {
+    "file": "src/StandardPatient.cpp",
+    "arguments": [
+      "g++",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/StandardPatient.o",
+      "src/StandardPatient.cpp"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/StandardPatient.o"
+  },
+  {
+    "file": "src/StandardPatient.cpp",
+    "arguments": [
+      "g++",
+      "-fno-omit-frame-pointer",
+      "-mno-omit-leaf-frame-pointer",
+      "-march=armv8-a",
+      "-std=c++17",
+      "-Wall",
+      "-Iinclude",
+      "-c",
+      "-o",
+      "obj/StandardPatient.o",
+      "src/StandardPatient.cpp",
+      "-B/nix/store/1bdzriipn18184zpwh2lfdabk2gqcgxn-glibc-2.42-61/lib/",
+      "-idirafter",
+      "/nix/store/11azz9spqc81walgg0mq9wjxrgbi4xqz-glibc-2.42-61-dev/include",
+      "-idirafter",
+      "/nix/store/hy0wk8hisvsiql18i7v8qrvzkcagz1nc-gcc-15.2.0/lib/gcc/aarch64-unknown-linux-gnu/15.2.0/include-fixed",
+      "-B/nix/store/7a3zsvzzm9ki2r3w2cl0mx12zjicinkj-gcc-15.2.0-lib/lib"
+    ],
+    "directory": "/home/sioodmy/dev/zaliczenieobiektowka/projekt",
+    "output": "obj/StandardPatient.o"
+  }
+]
