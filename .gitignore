@@ -3,3 +3,9 @@ output/*
 .cache/
 obj/
 bin/
+docs_out/
+docs/*.aux
+docs/*.log
+docs/*.out
+docs/*.toc
+docs/main.pdf

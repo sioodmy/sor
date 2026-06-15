@@ -1,0 +1,293 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{lmodern}
+\usepackage[polish]{babel}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{listings}
+\usepackage{xcolor}
+
+\geometry{margin=2.5cm}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    pdftitle={Dokumentacja projektu},
+}
+
+\lstset{
+    basicstyle=\fontfamily{lmtt}\selectfont\small,
+    breaklines=true,
+    frame=single,
+    backgroundcolor=\color{gray!8}
+}
+
+\newcommand{\diagram}[3]{%
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.9\textwidth]{#2}
+        \caption{#1}
+        \label{fig:#3}
+    \end{figure}
+}
+
+\title{%
+    \textbf{Symulacja pracy Szpitalnego Oddziału Ratunkowego}\\[0.4em]
+    \large Dokumentacja projektu\\Programowanie obiektowe
+}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\newpage
+
+\section{Wprowadzenie}
+
+Niniejszy dokument opisuje projekt przygotowany na zaliczenie z przedmiotu
+programowanie obiektowe. Głównym założeniem projektu jest zaprojektowanie
+i zaimplementowanie aplikacji w języku C++, która w sposób uproszczony
+odwzorowuje pracę Szpitalnego Oddziału Ratunkowego (SOR). W implementacji
+zastosowano podstawowe mechanizmy programowania obiektowego: dziedziczenie,
+polimorfizm, enkapsulację oraz kompozycję obiektów.
+
+Projekt nie stanowi pełnego systemu informatycznego szpitala, lecz model
+dydaktyczny. Symulacja generuje losowych pacjentów, przydziela im priorytet
+w triażu, kolejkuje ich według pilności i obsługuje w gabinetach lekarskich.
+Wyniki zapisywane są do pliku CSV, a następnie można je przeanalizować
+w prostym panelu webowym napisanym w Pythonie.
+
+\section{Cel i zakres projektu}
+
+\subsection{Cel główny}
+
+Celem projektu jest stworzenie symulacji dyskretnej, która pozwala obserwować,
+jak zmienia się obciążenie oddziału ratunkowego w czasie. Model umożliwia
+odpowiedź na kilka prostych pytań badawczych:
+\begin{itemize}[noitemsep]
+    \item ile pacjentów dociera do SOR-u w zadanym okresie,
+    \item jak rośnie kolejka oczekujących,
+    \item ile gabinetów jest jednocześnie zajętych,
+    \item ile osób zostaje ostatecznie wyleczonych.
+\end{itemize}
+
+\subsection{Zakres funkcjonalny}
+
+Program realizuje następujące zadania:
+\begin{itemize}[noitemsep]
+    \item wczytanie parametrów symulacji z pliku konfiguracyjnego \texttt{config.ini},
+    \item losowe generowanie pacjentów o różnych typach klinicznych,
+    \item triaż wykonywany przez pielęgniarkę (przypisanie priorytetu),
+    \item kolejkowanie pacjentów w poczekalni według priorytetu,
+    \item leczenie w gabinetach konsultacyjnych prowadzonych przez lekarzy,
+    \item symulację pogorszenia stanu pacjentów oczekujących (zależnie od typu),
+    \item logowanie stanu systemu do pliku CSV po każdym kroku czasowym,
+    \item wizualizację wyników w panelu Streamlit.
+\end{itemize}
+
+\section{Opis problemu i motywacja}
+
+Tematem projektu jest Szpitalny Oddział Ratunkowy, czyli miejsce, w którym
+pacjenci przyjmowani są w trybie pilnym. W rzeczywistości personel musi szybko
+ocenić stan pacjenta (triaż) i zdecydować, kto wymaga natychmiastowej pomocy.
+W modelu projektu proces ten uproszczono do trzech poziomów priorytetu:
+\emph{zielony}, \emph{żółty} oraz \emph{czerwony}.
+
+\section{Architektura rozwiązania}
+
+\subsection{Przegląd modułów}
+
+Aplikacja składa się z kilku logicznych części:
+\begin{description}
+    \item[Symulacja C++] Główna logika programu. Klasa
+        \texttt{EmergencyDepartment} koordynuje przebieg symulacji.
+    \item[Model danych] Hierarchia klas reprezentujących osoby, pacjentów,
+        pracowników medycznych oraz pomieszczenia.
+    \item[Konfiguracja] Plik INI z czasem symulacji, krokiem czasowym, liczbą
+        gabinetów i prawdopodobieństwem pojawienia się pacjenta.
+    \item[Logger CSV] Zapis metryk: minuta, zajęte gabinety, liczba oczekujących,
+        łączna liczba wyleczonych.
+    \item[Panel analityczny (Python)] Skrypt \texttt{dashboard.py} wczytuje CSV
+        i rysuje wykresy w Streamlit.
+    \item[Testy jednostkowe] Testy Google Test sprawdzają wybrane klasy.
+    \item[Dokumentacja API] Dokumentacja kodu generowana przez Doxygen.
+\end{description}
+
+\subsection{Przebieg symulacji}
+
+Symulacja działa w pętli czasowej. W każdym kroku (domyślnie co kilka minut
+wirtualnych):
+\begin{enumerate}[noitemsep]
+    \item system próbuje wygenerować nowego pacjenta (z zadanym prawdopodobieństwem),
+    \item pielęgniarka wykonuje triaż i pacjent trafia do poczekalni,
+    \item aktualizowany jest stan pacjentów oczekujących,
+    \item w gabinetach kontynuowane jest leczenie,
+    \item wolne gabinety z przypisanym lekarzem przyjmują kolejnych pacjentów
+        z poczekalni,
+    \item logger zapisuje bieżące statystyki.
+\end{enumerate}
+
+Kolejka w poczekalni jest implementowana jako kopiec priorytetowy. Pacjenci
+o wyższym priorytecie są obsługiwani wcześniej.
+
+\subsection{Hierarchia klas}
+
+Poniżej przedstawiono najważniejsze relacje między klasami (szczegóły
+w diagramach w dalszej części dokumentu):
+
+\begin{itemize}[noitemsep]
+    \item \texttt{Person}: klasa bazowa dla ludzi w systemie.
+    \item \texttt{Patient}: pacjent; klasa abstrakcyjna z metodami wirtualnymi
+        \texttt{performWaitingStep()} oraz \texttt{getDiagnosis()}.
+    \item \texttt{StandardPatient}, \texttt{CardiacPatient}, \texttt{TraumaPatient}:
+        konkretne typy pacjentów.
+    \item \texttt{Employee}: pracownik; klasa abstrakcyjna z metodą
+        \texttt{isBusy()}.
+    \item \texttt{Doctor}, \texttt{Nurse}: role medyczne.
+    \item \texttt{Room}: pomieszczenie; bazowa dla \texttt{WaitingRoom}
+        i \texttt{ConsultationRoom}.
+    \item \texttt{EmergencyDepartment}: agreguje poczekalnię, gabinety,
+        personel i logger.
+    \item \texttt{ConfigParser}, \texttt{LoggerCSV}: klasy pomocnicze.
+\end{itemize}
+
+\section{Diagramy}
+
+\diagram{Diagram klas systemu symulacji SOR}{img/class.png}{diagram-klas}
+
+\diagram{Diagram obiektów (przykładowa konfiguracja w czasie triażu)}{img/object.png}{diagram-obiektow}
+
+\diagram{Diagram sekwencji: przyjęcie i obsługa pacjenta}{img/sequence.png}{diagram-sekwencji}
+
+
+\section{Zastosowane mechanizmy obiektowe}
+
+W projekcie wykorzystano kilka koncepcji omawianych na zajęciach:
+
+\begin{itemize}
+    \item \textbf{Dziedziczenie}: na przykład \texttt{Patient} dziedziczy po
+        \texttt{Person}, a \texttt{CardiacPatient} po \texttt{Patient}.
+    \item \textbf{Polimorfizm }: różne typy pacjentów inaczej
+        zachowują się podczas oczekiwania (\texttt{performWaitingStep}).
+    \item \textbf{Abstrakcja}: klasy bazowe definiują interfejs, a szczegóły
+        implementują klasy pochodne.
+    \item \textbf{Kompozycja i agregacja}: \texttt{EmergencyDepartment}
+        zarządza obiektami poczekalni, gabinetów i pracowników.
+    \item \textbf{Enkapsulacja}: pola klas są ukryte w sekcji
+        \texttt{private}/\texttt{protected}, dostęp zapewniają metody.
+    \item \textbf{RTTI}: w triażu pielęgniarka wyszukiwana jest przez
+        \texttt{dynamic\_cast\textless Nurse*\textgreater}.
+\end{itemize}
+
+\section{Konfiguracja symulacji}
+
+Parametry wczytywane są z pliku \texttt{config/config.ini}. Przykładowa zawartość:
+
+\begin{lstlisting}
+total_time=2139
+step_duration=5
+spawn_chance=67
+num_rooms=2
+\end{lstlisting}
+
+\begin{table}[H]
+    \centering
+    \caption{Opis parametrów konfiguracyjnych}
+    \begin{tabular}{@{}llp{7cm}@{}}
+        \toprule
+        Parametr & Typ & Znaczenie \\
+        \midrule
+        \texttt{total\_time} & int & Czas trwania symulacji w minutach wirtualnych \\
+        \texttt{step\_duration} & int & Długość jednego kroku symulacji \\
+        \texttt{spawn\_chance} & int & Szansa (od 0 do 99) pojawienia się pacjenta w kroku \\
+        \texttt{num\_rooms} & int & Liczba gabinetów konsultacyjnych \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Wyniki symulacji i panel analityczny}
+
+Po uruchomieniu program zapisuje dane do \texttt{output/simulation.csv}. Każdy wiersz
+zawiera m.in.\ bieżącą minutę, liczbę zajętych gabinetów, pacjentów oczekujących
+oraz skumulowaną liczbę wyleczonych osób.
+
+Panel \texttt{dashboard.py} (Streamlit + pandas) umożliwia szybki podgląd wykresów
+bez ręcznej analizy pliku. Pozwala to ocenić, czy na przykład zwiększenie liczby
+gabinetów skraca kolejkę po zmianie konfiguracji i ponownym uruchomieniu symulacji.
+
+\section{Wykorzystane narzędzia i technologie}
+
+\begin{table}[H]
+    \centering
+    \caption{Stos technologiczny projektu}
+    \begin{tabular}{@{}lp{9cm}@{}}
+        \toprule
+        Narzędzie & Zastosowanie \\
+        \midrule
+        C++ & Implementacja silnika symulacji \\
+        GCC / g++ & Kompilator \\
+        GNU Make & Automatyzacja budowania \\
+        Google Test & Testy jednostkowe \\
+        Python 3 & Panel wizualizacji wyników \\
+        Streamlit, pandas & Interfejs webowy i analiza niezmiernie użytecznych danych CSV \\
+        Doxygen & Automatyczna dokumentacja kodu źródłowego \\
+        \LaTeX & Niniejsza dokumentacja projektowa \\
+        Nix  & Reprodukowalne środowisko budowania i paczki \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\section{Budowanie i uruchamianie}
+
+\subsection{Kompilacja i uruchomienie symulacji}
+
+W katalogu projektu, po wejściu do powłoki Nix (\texttt{nix develop}), symulację
+uruchamia się poleceniami:
+
+\begin{lstlisting}
+make
+make run
+\end{lstlisting}
+
+Plik wykonywalny powstaje w \texttt{bin/symulacja}. Przed uruchomieniem warto
+sprawdzić parametry w \texttt{config/config.ini}.
+
+\subsection{Testy}
+
+Testy uruchamiane są poleceniem:
+
+\begin{lstlisting}
+make test
+\end{lstlisting}
+
+\subsection{Panel analityczny}
+
+Po wygenerowaniu pliku CSV:
+
+\begin{lstlisting}
+make dashboard
+\end{lstlisting}
+
+\subsection{Dokumentacja}
+
+Cała dokumentacja (Doxygen + PDF) budowana jest jedną paczką Nix:
+
+\begin{lstlisting}
+nix build .#docs
+\end{lstlisting}
+
+Wynik instalacji zawiera:
+\begin{itemize}[noitemsep]
+    \item \texttt{result/doxygen/}: dokumentacja HTML z Doxygen,
+    \item \texttt{result/docs.pdf}: niniejszy dokument w formacie PDF.
+\end{itemize}
+
+\end{document}
