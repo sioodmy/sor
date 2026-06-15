@@ -5,5 +5,6 @@
     black.enable = true;
     clang-format.enable = true;
     nixfmt.enable = true;
+    latexindent.enable = true;
   };
 }

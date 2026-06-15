@@ -73,24 +73,24 @@ Celem projektu jest stworzenie symulacji dyskretnej, która pozwala obserwować,
 jak zmienia się obciążenie oddziału ratunkowego w czasie. Model umożliwia
 odpowiedź na kilka prostych pytań badawczych:
 \begin{itemize}[noitemsep]
-    \item ile pacjentów dociera do SOR-u w zadanym okresie,
-    \item jak rośnie kolejka oczekujących,
-    \item ile gabinetów jest jednocześnie zajętych,
-    \item ile osób zostaje ostatecznie wyleczonych.
+	\item ile pacjentów dociera do SOR-u w zadanym okresie,
+	\item jak rośnie kolejka oczekujących,
+	\item ile gabinetów jest jednocześnie zajętych,
+	\item ile osób zostaje ostatecznie wyleczonych.
 \end{itemize}
 
 \subsection{Zakres funkcjonalny}
 
 Program realizuje następujące zadania:
 \begin{itemize}[noitemsep]
-    \item wczytanie parametrów symulacji z pliku konfiguracyjnego \texttt{config.ini},
-    \item losowe generowanie pacjentów o różnych typach klinicznych,
-    \item triaż wykonywany przez pielęgniarkę (przypisanie priorytetu),
-    \item kolejkowanie pacjentów w poczekalni według priorytetu,
-    \item leczenie w gabinetach konsultacyjnych prowadzonych przez lekarzy,
-    \item symulację pogorszenia stanu pacjentów oczekujących (zależnie od typu),
-    \item logowanie stanu systemu do pliku CSV po każdym kroku czasowym,
-    \item wizualizację wyników w panelu Streamlit.
+	\item wczytanie parametrów symulacji z pliku konfiguracyjnego \texttt{config.ini},
+	\item losowe generowanie pacjentów o różnych typach klinicznych,
+	\item triaż wykonywany przez pielęgniarkę (przypisanie priorytetu),
+	\item kolejkowanie pacjentów w poczekalni według priorytetu,
+	\item leczenie w gabinetach konsultacyjnych prowadzonych przez lekarzy,
+	\item symulację pogorszenia stanu pacjentów oczekujących (zależnie od typu),
+	\item logowanie stanu systemu do pliku CSV po każdym kroku czasowym,
+	\item wizualizację wyników w panelu Streamlit.
 \end{itemize}
 
 \section{Opis problemu i motywacja}
@@ -107,18 +107,18 @@ W modelu projektu proces ten uproszczono do trzech poziomów priorytetu:
 
 Aplikacja składa się z kilku logicznych części:
 \begin{description}
-    \item[Symulacja C++] Główna logika programu. Klasa
-        \texttt{EmergencyDepartment} koordynuje przebieg symulacji.
-    \item[Model danych] Hierarchia klas reprezentujących osoby, pacjentów,
-        pracowników medycznych oraz pomieszczenia.
-    \item[Konfiguracja] Plik INI z czasem symulacji, krokiem czasowym, liczbą
-        gabinetów i prawdopodobieństwem pojawienia się pacjenta.
-    \item[Logger CSV] Zapis metryk: minuta, zajęte gabinety, liczba oczekujących,
-        łączna liczba wyleczonych.
-    \item[Panel analityczny (Python)] Skrypt \texttt{dashboard.py} wczytuje CSV
-        i rysuje wykresy w Streamlit.
-    \item[Testy jednostkowe] Testy Google Test sprawdzają wybrane klasy.
-    \item[Dokumentacja API] Dokumentacja kodu generowana przez Doxygen.
+	\item[Symulacja C++] Główna logika programu. Klasa
+	      \texttt{EmergencyDepartment} koordynuje przebieg symulacji.
+	\item[Model danych] Hierarchia klas reprezentujących osoby, pacjentów,
+	      pracowników medycznych oraz pomieszczenia.
+	\item[Konfiguracja] Plik INI z czasem symulacji, krokiem czasowym, liczbą
+	      gabinetów i prawdopodobieństwem pojawienia się pacjenta.
+	\item[Logger CSV] Zapis metryk: minuta, zajęte gabinety, liczba oczekujących,
+	      łączna liczba wyleczonych.
+	\item[Panel analityczny (Python)] Skrypt \texttt{dashboard.py} wczytuje CSV
+	      i rysuje wykresy w Streamlit.
+	\item[Testy jednostkowe] Testy Google Test sprawdzają wybrane klasy.
+	\item[Dokumentacja API] Dokumentacja kodu generowana przez Doxygen.
 \end{description}
 
 \subsection{Przebieg symulacji}
@@ -126,13 +126,13 @@ Aplikacja składa się z kilku logicznych części:
 Symulacja działa w pętli czasowej. W każdym kroku (domyślnie co kilka minut
 wirtualnych):
 \begin{enumerate}[noitemsep]
-    \item system próbuje wygenerować nowego pacjenta (z zadanym prawdopodobieństwem),
-    \item pielęgniarka wykonuje triaż i pacjent trafia do poczekalni,
-    \item aktualizowany jest stan pacjentów oczekujących,
-    \item w gabinetach kontynuowane jest leczenie,
-    \item wolne gabinety z przypisanym lekarzem przyjmują kolejnych pacjentów
-        z poczekalni,
-    \item logger zapisuje bieżące statystyki.
+	\item system próbuje wygenerować nowego pacjenta (z zadanym prawdopodobieństwem),
+	\item pielęgniarka wykonuje triaż i pacjent trafia do poczekalni,
+	\item aktualizowany jest stan pacjentów oczekujących,
+	\item w gabinetach kontynuowane jest leczenie,
+	\item wolne gabinety z przypisanym lekarzem przyjmują kolejnych pacjentów
+	      z poczekalni,
+	\item logger zapisuje bieżące statystyki.
 \end{enumerate}
 
 Kolejka w poczekalni jest implementowana jako kopiec priorytetowy. Pacjenci
@@ -144,19 +144,19 @@ Poniżej przedstawiono najważniejsze relacje między klasami (szczegóły
 w diagramach w dalszej części dokumentu):
 
 \begin{itemize}[noitemsep]
-    \item \texttt{Person}: klasa bazowa dla ludzi w systemie.
-    \item \texttt{Patient}: pacjent; klasa abstrakcyjna z metodami wirtualnymi
-        \texttt{performWaitingStep()} oraz \texttt{getDiagnosis()}.
-    \item \texttt{StandardPatient}, \texttt{CardiacPatient}, \texttt{TraumaPatient}:
-        konkretne typy pacjentów.
-    \item \texttt{Employee}: pracownik; klasa abstrakcyjna z metodą
-        \texttt{isBusy()}.
-    \item \texttt{Doctor}, \texttt{Nurse}: role medyczne.
-    \item \texttt{Room}: pomieszczenie; bazowa dla \texttt{WaitingRoom}
-        i \texttt{ConsultationRoom}.
-    \item \texttt{EmergencyDepartment}: agreguje poczekalnię, gabinety,
-        personel i logger.
-    \item \texttt{ConfigParser}, \texttt{LoggerCSV}: klasy pomocnicze.
+	\item \texttt{Person}: klasa bazowa dla ludzi w systemie.
+	\item \texttt{Patient}: pacjent; klasa abstrakcyjna z metodami wirtualnymi
+	      \texttt{performWaitingStep()} oraz \texttt{getDiagnosis()}.
+	\item \texttt{StandardPatient}, \texttt{CardiacPatient}, \texttt{TraumaPatient}:
+	      konkretne typy pacjentów.
+	\item \texttt{Employee}: pracownik; klasa abstrakcyjna z metodą
+	      \texttt{isBusy()}.
+	\item \texttt{Doctor}, \texttt{Nurse}: role medyczne.
+	\item \texttt{Room}: pomieszczenie; bazowa dla \texttt{WaitingRoom}
+	      i \texttt{ConsultationRoom}.
+	\item \texttt{EmergencyDepartment}: agreguje poczekalnię, gabinety,
+	      personel i logger.
+	\item \texttt{ConfigParser}, \texttt{LoggerCSV}: klasy pomocnicze.
 \end{itemize}
 
 \section{Diagramy}
@@ -173,18 +173,18 @@ w diagramach w dalszej części dokumentu):
 W projekcie wykorzystano kilka koncepcji omawianych na zajęciach:
 
 \begin{itemize}
-    \item \textbf{Dziedziczenie}: na przykład \texttt{Patient} dziedziczy po
-        \texttt{Person}, a \texttt{CardiacPatient} po \texttt{Patient}.
-    \item \textbf{Polimorfizm }: różne typy pacjentów inaczej
-        zachowują się podczas oczekiwania (\texttt{performWaitingStep}).
-    \item \textbf{Abstrakcja}: klasy bazowe definiują interfejs, a szczegóły
-        implementują klasy pochodne.
-    \item \textbf{Kompozycja i agregacja}: \texttt{EmergencyDepartment}
-        zarządza obiektami poczekalni, gabinetów i pracowników.
-    \item \textbf{Enkapsulacja}: pola klas są ukryte w sekcji
-        \texttt{private}/\texttt{protected}, dostęp zapewniają metody.
-    \item \textbf{RTTI}: w triażu pielęgniarka wyszukiwana jest przez
-        \texttt{dynamic\_cast\textless Nurse*\textgreater}.
+	\item \textbf{Dziedziczenie}: na przykład \texttt{Patient} dziedziczy po
+	      \texttt{Person}, a \texttt{CardiacPatient} po \texttt{Patient}.
+	\item \textbf{Polimorfizm }: różne typy pacjentów inaczej
+	      zachowują się podczas oczekiwania (\texttt{performWaitingStep}).
+	\item \textbf{Abstrakcja}: klasy bazowe definiują interfejs, a szczegóły
+	      implementują klasy pochodne.
+	\item \textbf{Kompozycja i agregacja}: \texttt{EmergencyDepartment}
+	      zarządza obiektami poczekalni, gabinetów i pracowników.
+	\item \textbf{Enkapsulacja}: pola klas są ukryte w sekcji
+	      \texttt{private}/\texttt{protected}, dostęp zapewniają metody.
+	\item \textbf{RTTI}: w triażu pielęgniarka wyszukiwana jest przez
+	      \texttt{dynamic\_cast\textless Nurse*\textgreater}.
 \end{itemize}
 
 \section{Konfiguracja symulacji}
@@ -199,18 +199,18 @@ num_rooms=2
 \end{lstlisting}
 
 \begin{table}[H]
-    \centering
-    \caption{Opis parametrów konfiguracyjnych}
-    \begin{tabular}{@{}llp{7cm}@{}}
-        \toprule
-        Parametr & Typ & Znaczenie \\
-        \midrule
-        \texttt{total\_time} & int & Czas trwania symulacji w minutach wirtualnych \\
-        \texttt{step\_duration} & int & Długość jednego kroku symulacji \\
-        \texttt{spawn\_chance} & int & Szansa (od 0 do 99) pojawienia się pacjenta w kroku \\
-        \texttt{num\_rooms} & int & Liczba gabinetów konsultacyjnych \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Opis parametrów konfiguracyjnych}
+	\begin{tabular}{@{}llp{7cm}@{}}
+		\toprule
+		Parametr                & Typ & Znaczenie                                           \\
+		\midrule
+		\texttt{total\_time}    & int & Czas trwania symulacji w minutach wirtualnych       \\
+		\texttt{step\_duration} & int & Długość jednego kroku symulacji                     \\
+		\texttt{spawn\_chance}  & int & Szansa (od 0 do 99) pojawienia się pacjenta w kroku \\
+		\texttt{num\_rooms}     & int & Liczba gabinetów konsultacyjnych                    \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \section{Wyniki symulacji i panel analityczny}
@@ -226,23 +226,23 @@ gabinetów skraca kolejkę po zmianie konfiguracji i ponownym uruchomieniu symul
 \section{Wykorzystane narzędzia i technologie}
 
 \begin{table}[H]
-    \centering
-    \caption{Stos technologiczny projektu}
-    \begin{tabular}{@{}lp{9cm}@{}}
-        \toprule
-        Narzędzie & Zastosowanie \\
-        \midrule
-        C++ & Implementacja silnika symulacji \\
-        GCC / g++ & Kompilator \\
-        GNU Make & Automatyzacja budowania \\
-        Google Test & Testy jednostkowe \\
-        Python 3 & Panel wizualizacji wyników \\
-        Streamlit, pandas & Interfejs webowy i analiza niezmiernie użytecznych danych CSV \\
-        Doxygen & Automatyczna dokumentacja kodu źródłowego \\
-        \LaTeX & Niniejsza dokumentacja projektowa \\
-        Nix  & Reprodukowalne środowisko budowania i paczki \\
-        \bottomrule
-    \end{tabular}
+	\centering
+	\caption{Stos technologiczny projektu}
+	\begin{tabular}{@{}lp{9cm}@{}}
+		\toprule
+		Narzędzie         & Zastosowanie                                                  \\
+		\midrule
+		C++               & Implementacja silnika symulacji                               \\
+		GCC / g++         & Kompilator                                                    \\
+		GNU Make          & Automatyzacja budowania                                       \\
+		Google Test       & Testy jednostkowe                                             \\
+		Python 3          & Panel wizualizacji wyników                                    \\
+		Streamlit, pandas & Interfejs webowy i analiza niezmiernie użytecznych danych CSV \\
+		Doxygen           & Automatyczna dokumentacja kodu źródłowego                     \\
+		\LaTeX            & Niniejsza dokumentacja projektowa                             \\
+		Nix               & Reprodukowalne środowisko budowania i paczki                  \\
+		\bottomrule
+	\end{tabular}
 \end{table}
 
 \section{Budowanie i uruchamianie}
@@ -286,8 +286,8 @@ nix build .#docs
 
 Wynik instalacji zawiera:
 \begin{itemize}[noitemsep]
-    \item \texttt{result/doxygen/}: dokumentacja HTML z Doxygen,
-    \item \texttt{result/docs.pdf}: niniejszy dokument w formacie PDF.
+	\item \texttt{result/doxygen/}: dokumentacja HTML z Doxygen,
+	\item \texttt{result/docs.pdf}: niniejszy dokument w formacie PDF.
 \end{itemize}
 
 \end{document}
